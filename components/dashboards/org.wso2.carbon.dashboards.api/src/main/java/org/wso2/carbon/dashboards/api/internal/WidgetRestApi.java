@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.analytics.msf4j.interceptor.common.AuthenticationInterceptor;
 import org.wso2.carbon.dashboards.core.WidgetMetadataProvider;
 import org.wso2.carbon.dashboards.core.bean.importer.WidgetType;
-import org.wso2.carbon.dashboards.core.bean.widget.GeneratedWidgetConfigs;
 import org.wso2.carbon.dashboards.core.exception.DashboardException;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.interceptor.annotation.RequestInterceptor;
@@ -39,7 +38,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.Response.Status.CONFLICT;
-import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.OK;
 
@@ -190,34 +188,6 @@ public class WidgetRestApi implements Microservice {
             return Response.serverError()
                     .entity("Server error occurred when deleting widget '{}'. '" +
                             widgetId + "'.").build();
-        }
-    }
-
-    /**
-     * Create a generated widget.
-     *
-     * @param generatedWidgetConfigs data for the creating widget.
-     * @return response
-     */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/")
-    public Response create(GeneratedWidgetConfigs generatedWidgetConfigs) {
-        try {
-            widgetMetadataProvider.addGeneratedWidgetConfigs(generatedWidgetConfigs);
-            return Response.status(CREATED).build();
-        } catch (DashboardException e) {
-            LOGGER.error("An error occurred when creating a new gadget from {} data.",
-                    replaceCRLFCharacters(generatedWidgetConfigs.toString()), e);
-            return Response.serverError()
-                    .entity("Cannot create a new gadget from '" + generatedWidgetConfigs + "'.").build();
-        } catch (Throwable throwable) {
-            LOGGER.error("Server error occurred when creating a new gadget from {} data. ",
-                    replaceCRLFCharacters(generatedWidgetConfigs.toString()), throwable);
-            return Response.serverError()
-                    .entity("Server error occurred when creating a new gadget from {} data. '" +
-                            generatedWidgetConfigs.toString() + "'.").build();
         }
     }
 

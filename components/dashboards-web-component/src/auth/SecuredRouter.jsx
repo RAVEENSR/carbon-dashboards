@@ -28,7 +28,6 @@ import DashboardSettingsPage from '../designer/DashboardSettingsPage';
 import DashboardListingPage from '../listing/DashboardListingPage';
 import DashboardViewPage from '../viewer/DashboardViewPage';
 import WidgetStore from '../widget-store/WidgetStore';
-import GadgetsGenerationWizard from '../gadgets-generation-wizard/components/GadgetsGenerationWizard';
 
 /**
  * Session skew.
@@ -100,9 +99,6 @@ export default class SecuredRouter extends Component {
 
                 {/* Create dashboard */}
                 <Route exact path={'/create'} component={DashboardCreatePage} />
-
-                {/* Create gadget */}
-                <Route exact path={'/createGadget'} component={GadgetsGenerationWizard} />
 
                 {/* Widget Store */}
                 <Route exact path={'/widgets'} component={WidgetStore} />

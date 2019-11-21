@@ -268,16 +268,6 @@ export default class WidgetStore extends Component {
                         (<FormattedMessage id="see.less" defaultMessage="See Less"/>) :
                         (<FormattedMessage id="see.more" defaultMessage="See More"/>))}
                 </p>
-                {
-                    this.state.hasCreatorPermission &&
-                    (
-                        <span style={styles.actionButton} title="Create Widget">
-                            <FloatingActionButton onClick={() => this.props.history.push("/createGadget")}>
-                                <ContentAdd/>
-                            </FloatingActionButton>
-                        </span>
-                    )
-                }
             </MuiThemeProvider>
         );
     }

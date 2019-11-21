@@ -20,7 +20,7 @@ import Axios from 'axios';
 import AuthManager from '../../dashboards-web-component/src/auth/utils/AuthManager';
 import SearchRenderer from './renderers/search-renderer/src/SearchRenderer';
 import VizRenderer from './renderers/vizgrammar-renderer/src/VizgrammarRenderer';
-import Types from "../../dashboards-web-component/src/gadgets-generation-wizard/utils/Types";
+import Types from "../../dashboards-web-component/src/utils/Types";
 
 const renderers = {
     VizgrammarRenderer: VizRenderer,
