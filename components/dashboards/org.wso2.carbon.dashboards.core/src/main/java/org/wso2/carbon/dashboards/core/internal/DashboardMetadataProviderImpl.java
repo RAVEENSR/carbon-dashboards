@@ -32,7 +32,6 @@ import org.wso2.carbon.dashboards.core.bean.DashboardMetadata;
 import org.wso2.carbon.dashboards.core.bean.importer.DashboardArtifact;
 import org.wso2.carbon.dashboards.core.bean.importer.WidgetCollection;
 import org.wso2.carbon.dashboards.core.bean.importer.WidgetType;
-import org.wso2.carbon.dashboards.core.bean.widget.GeneratedWidgetConfigs;
 import org.wso2.carbon.dashboards.core.exception.DashboardException;
 import org.wso2.carbon.dashboards.core.exception.DashboardRuntimeException;
 import org.wso2.carbon.dashboards.core.exception.UnauthorizedException;
@@ -333,11 +332,7 @@ public class DashboardMetadataProviderImpl implements DashboardMetadataProvider 
 
         Map<WidgetType, Set<String>> widgets = findWidgets(dashboardMetadata.getContent());
 
-        // Set metadata of generated widgets
-        Set<GeneratedWidgetConfigs> generatedWidgetConfigs = widgetMetadataProvider
-                .getGeneratedWidgetConfigs(widgets.get(WidgetType.GENERATED));
         WidgetCollection widgetCollection = new WidgetCollection();
-        widgetCollection.setGenerated(generatedWidgetConfigs);
 
         // Set list of custom widgets
         widgetCollection.setCustom(widgets.get(WidgetType.CUSTOM));

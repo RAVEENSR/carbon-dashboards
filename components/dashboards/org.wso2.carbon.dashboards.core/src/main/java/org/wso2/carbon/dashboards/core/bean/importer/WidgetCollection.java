@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.dashboards.core.bean.importer;
 
-import org.wso2.carbon.dashboards.core.bean.widget.GeneratedWidgetConfigs;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,26 +27,7 @@ import java.util.Set;
  * @since 4.0.29
  */
 public class WidgetCollection {
-    private Set<GeneratedWidgetConfigs> generated = new HashSet<>();
     private Set<String> custom = new HashSet<>();
-
-    /**
-     * Returns generated widgets.
-     *
-     * @return Set of generated widgets
-     */
-    public Set<GeneratedWidgetConfigs> getGenerated() {
-        return generated;
-    }
-
-    /**
-     * Set set of generated widgets.
-     *
-     * @param generated Generated widgets
-     */
-    public void setGenerated(Set<GeneratedWidgetConfigs> generated) {
-        this.generated = generated;
-    }
 
     /**
      * Returns Ids of the custom widgets.

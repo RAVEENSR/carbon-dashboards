@@ -156,6 +156,7 @@ public class DashboardDataProviderAuthorizer implements DataProviderAuthorizer {
             throw new DataProviderException(error);
         }
 
+        LOGGER.info("Widget Name: " + widgetName);
         Optional<DashboardMetadata> dashboardMetadata;
         try {
             dashboardMetadata

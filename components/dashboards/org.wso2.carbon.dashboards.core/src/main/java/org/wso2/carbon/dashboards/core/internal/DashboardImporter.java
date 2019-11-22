@@ -26,7 +26,6 @@ import org.wso2.carbon.dashboards.core.WidgetMetadataProvider;
 import org.wso2.carbon.dashboards.core.bean.DashboardMetadata;
 import org.wso2.carbon.dashboards.core.bean.importer.DashboardArtifact;
 import org.wso2.carbon.dashboards.core.bean.importer.WidgetType;
-import org.wso2.carbon.dashboards.core.bean.widget.GeneratedWidgetConfigs;
 import org.wso2.carbon.dashboards.core.exception.DashboardException;
 import org.wso2.carbon.dashboards.core.internal.io.DashboardArtifactHandler;
 import org.wso2.carbon.utils.Utils;
@@ -118,26 +117,6 @@ public class DashboardImporter {
                             "Cannot check existence of custom widget '{}' which is included in the importing " +
                             "dashboard '{}'.",
                             widgetId, dashboardArtifactPath, e);
-                    importedSuccessfully = false;
-                }
-            }
-
-            // Deploy generated widgets if not available.
-            for (GeneratedWidgetConfigs widgetConfigs : dashboardArtifact.getWidgets().getGenerated()) {
-                String widgetConfigsId = widgetConfigs.getId();
-                try {
-                    if (!widgetMetadataProvider.isWidgetPresent(widgetConfigsId, WidgetType.GENERATED)) {
-                        widgetMetadataProvider.addGeneratedWidgetConfigs(widgetConfigs);
-                    } else {
-                        widgetMetadataProvider.updateGeneratedWidgetConfigs(widgetConfigs);
-                    }
-                    LOGGER.debug("Successfully imported generated widget '{}' from dashboard '{}'.", widgetConfigsId,
-                            dashboardArtifactPath);
-                } catch (DashboardException e) {
-                    LOGGER.warn(
-                            "Cannot load generated widget '{}' which is included in the importing dashboard '{}'. " +
-                            "Hence, dashboard will be imported partially.",
-                            widgetConfigsId, dashboardArtifactPath, e);
                     importedSuccessfully = false;
                 }
             }

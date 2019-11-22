@@ -20,8 +20,6 @@ package org.wso2.carbon.dashboards.core.internal;
 import org.wso2.carbon.dashboards.core.WidgetMetadataProvider;
 import org.wso2.carbon.dashboards.core.bean.DashboardConfigurations;
 import org.wso2.carbon.dashboards.core.bean.importer.WidgetType;
-import org.wso2.carbon.dashboards.core.bean.widget.GeneratedWidgetConfigs;
-import org.wso2.carbon.dashboards.core.bean.widget.WidgetConfigs;
 import org.wso2.carbon.dashboards.core.bean.widget.WidgetMetaInfo;
 import org.wso2.carbon.dashboards.core.exception.DashboardException;
 import org.wso2.carbon.dashboards.core.exception.DashboardRuntimeException;
@@ -65,34 +63,8 @@ public class WidgetMetadataProviderImpl implements WidgetMetadataProvider {
 
     @Override
     public Optional<WidgetMetaInfo> getWidgetConfiguration(String widgetId) throws DashboardException {
-        GeneratedWidgetConfigs generatedWidgetConfigs = widgetMetadataDao.getGeneratedWidgetConfigsForId(widgetId);
-        if (generatedWidgetConfigs != null) {
-            WidgetMetaInfo widgetMetaInfo = new WidgetMetaInfo();
-            WidgetConfigs widgetConfigs = new WidgetConfigs();
-            widgetConfigs.setChartConfig(generatedWidgetConfigs.getChartConfig());
-            widgetConfigs.setProviderConfig(generatedWidgetConfigs.getProviderConfig());
-            widgetConfigs.setPubsub(generatedWidgetConfigs.getPubsub());
-            widgetConfigs.setGenerated(true);
-            widgetConfigs.setMetadata(generatedWidgetConfigs.getMetadata());
-            widgetMetaInfo.setVersion(generatedWidgetConfigs.getVersion());
-            widgetMetaInfo.setId(generatedWidgetConfigs.getId());
-            widgetMetaInfo.setName(generatedWidgetConfigs.getName());
-            widgetMetaInfo.setConfigs(widgetConfigs);
-            return Optional.of(widgetMetaInfo);
-        } else {
-            return dashboardApp.getExtension(EXTENSION_TYPE_WIDGETS, widgetId)
-                    .map(WidgetConfigurationReader::getConfiguration);
-        }
-    }
-
-    @Override
-    public void addGeneratedWidgetConfigs(GeneratedWidgetConfigs generatedWidgetConfigs) throws DashboardException {
-        widgetMetadataDao.addGeneratedWidgetConfigs(generatedWidgetConfigs);
-    }
-
-    @Override
-    public void updateGeneratedWidgetConfigs(GeneratedWidgetConfigs generatedWidgetConfigs) throws DashboardException {
-        widgetMetadataDao.updateGeneratedWidgetConfigs(generatedWidgetConfigs);
+        return dashboardApp.getExtension(EXTENSION_TYPE_WIDGETS, widgetId)
+                .map(WidgetConfigurationReader::getConfiguration);
     }
 
     @Override
@@ -105,19 +77,10 @@ public class WidgetMetadataProviderImpl implements WidgetMetadataProvider {
         // TODO: 02/05/19 Custom widget filtering also to be changed with widgetName 
         switch (widgetType) {
             case CUSTOM:
-                return isCustomWidgetPresent(widgetName);
-            case GENERATED:
-                return isGeneratedWidgetPresent(widgetName);
             case ALL:
-                return isCustomWidgetPresent(widgetName) || isGeneratedWidgetPresent(widgetName);
+                return isCustomWidgetPresent(widgetName);
         }
         return false;
-    }
-
-    private boolean isGeneratedWidgetPresent(String widgetName) throws DashboardException {
-        return widgetMetadataDao.getGeneratedWidgetIdSet().stream()
-                .map(GeneratedWidgetConfigs::getId)
-                .anyMatch(name -> name.equals(widgetName));
     }
 
     private boolean isCustomWidgetPresent(String widgetName) {
@@ -126,29 +89,8 @@ public class WidgetMetadataProviderImpl implements WidgetMetadataProvider {
 
     @Override
     public Set<WidgetMetaInfo> getAllWidgetConfigurations() throws DashboardException {
-        Set<WidgetMetaInfo> widgetMetaInfoSet = dashboardApp.getExtensions(EXTENSION_TYPE_WIDGETS).stream()
+        return dashboardApp.getExtensions(EXTENSION_TYPE_WIDGETS).stream()
                 .map(WidgetConfigurationReader::getConfiguration)
-                .collect(Collectors.toSet());
-        Set<GeneratedWidgetConfigs> generatedWidgetConfigsSet = widgetMetadataDao.getGeneratedWidgetIdSet();
-        for (GeneratedWidgetConfigs generatedWidgetConfigs : generatedWidgetConfigsSet) {
-            WidgetMetaInfo widgetMetaInfo = new WidgetMetaInfo();
-            WidgetConfigs widgetConfigs = new WidgetConfigs();
-            widgetMetaInfo.setId(generatedWidgetConfigs.getId());
-            widgetMetaInfo.setName(generatedWidgetConfigs.getName());
-            widgetConfigs.setPubsub(generatedWidgetConfigs.getPubsub());
-            widgetConfigs.setMetadata(generatedWidgetConfigs.getMetadata());
-            widgetConfigs.setGenerated(true);
-            widgetMetaInfo.setVersion(generatedWidgetConfigs.getVersion());
-            widgetMetaInfo.setConfigs(widgetConfigs);
-            widgetMetaInfoSet.add(widgetMetaInfo);
-        }
-        return widgetMetaInfoSet;
-    }
-
-    @Override
-    public Set<GeneratedWidgetConfigs> getGeneratedWidgetConfigs(Set<String> widgetIds) throws DashboardException {
-        return widgetMetadataDao.getGeneratedWidgetIdSet().stream()
-                .filter(generatedWidgetConfigs -> widgetIds.contains(generatedWidgetConfigs.getId()))
                 .collect(Collectors.toSet());
     }
 
